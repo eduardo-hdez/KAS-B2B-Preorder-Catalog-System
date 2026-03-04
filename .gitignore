@@ -3,5 +3,5 @@
 
 # npm
 node_modules/
-public/output.css
+project/public/output.css
 .env
