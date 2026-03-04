@@ -1,14 +1,14 @@
-const express = require("express");
+const express = require('express');
 const app = express();
 
-const path = require("path");
-app.use(express.static(path.join(__dirname, "public")));
+const path = require('path');
+app.use(express.static(path.join(__dirname, 'public')));
 
-app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "src/views"));
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'src/views'));
 
 app.use((request, response, next) => {
-  response.send("Login");
+  response.render('index', { title: 'Footer' });
 });
 
 app.listen(3000);
