@@ -8,7 +8,7 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'src/views'));
 
 app.use((request, response, next) => {
-  response.render('index', { title: 'Footer' });
+  response.render('index', { title: 'Navbar Empleado' });
 });
 
 app.listen(3000);
