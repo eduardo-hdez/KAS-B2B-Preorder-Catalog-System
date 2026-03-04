@@ -1,2 +1,7 @@
 # macOS
 .DS_Store
+
+# npm
+node_modules/
+public/output.css
+.env
