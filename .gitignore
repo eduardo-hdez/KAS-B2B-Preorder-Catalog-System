@@ -2,6 +2,6 @@
 .DS_Store
 
 # npm
-node_modules/
+**/node_modules/
 project/public/output.css
 .env
