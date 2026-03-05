@@ -27,8 +27,8 @@ app.get('/historial_reservas', (request, response) => {
   response.render('historial_reservas', { title: 'Historial de Reservas' });
 });
 
-app.get('/detalle_pedido', (request, response) => {
-  response.render('detalle_pedido', { title: 'Detalle de Pedido' });
+app.get('/detalle_reserva', (request, response) => {
+  response.render('detalle_reserva', { title: 'Detalle de Reserva' });
 });
 
 app.listen(3000);
