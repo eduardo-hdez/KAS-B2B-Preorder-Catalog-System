@@ -8,31 +8,31 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'src/views'));
 
 app.get('/', (request, response) => {
-  response.render('catalogo_productos', { title: 'Catalogo de Productos' });
+  response.render('cliente/catalogo_productos', { title: 'Catalogo de Productos' });
 });
 
 app.get('/catalogo', (request, response) => {
-  response.render('catalogo_productos', { title: 'Catalogo de Productos' });
+  response.render('cliente/catalogo_productos', { title: 'Catalogo de Productos' });
 });
 
 app.get('/carrito', (request, response) => {
-  response.render('carrito_reserva', { title: 'Carrito' });
+  response.render('cliente/carrito_reserva', { title: 'Carrito' });
 });
 
 app.get('/detalle_producto', (request, response) => {
-  response.render('detalle_producto', { title: 'Detalle de Producto' });
+  response.render('cliente/detalle_producto', { title: 'Detalle de Producto' });
 });
 
 app.get('/historial_reservas', (request, response) => {
-  response.render('historial_reservas', { title: 'Historial de Reservas' });
+  response.render('cliente/historial_reservas', { title: 'Historial de Reservas' });
 });
 
 app.get('/detalle_reserva', (request, response) => {
-  response.render('detalle_reserva', { title: 'Detalle de Reserva' });
+  response.render('cliente/detalle_reserva', { title: 'Detalle de Reserva' });
 });
 
 app.get('/info_perfil', (request, response) => {
-  response.render('info_perfil', { title: 'Información del Perfil' });
+  response.render('cliente/info_perfil', { title: 'Información del Perfil' });
 });
 
 app.listen(3000);
