@@ -13,4 +13,8 @@ router.get('/gestion-productos', (request, response) => {
   response.render('empleado/gestion-productos', { title: 'Gestión de Productos' });
 });
 
+router.get('/tabla-reservas', (request, response) => {
+  response.render('empleado/tabla-reservas', { title: 'Tabla de Reservas' });
+});
+
 module.exports = router;
