@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <%- include('partials/head') %>
+</head>
+<body class="bg-gray-50 flex flex-col min-h-screen">
+  <%- include('partials/navbar_cliente') %>
+
+  <main class="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow">
+    <!-- Breadcrumb -->
+    <div class="flex items-center gap-2 mb-6 text-gray-500 text-sm">
+      <a href="/" class="hover:text-[#2B6398] transition-colors">Inicio</a>
+      <span class="material-icons text-sm">chevron_right</span>
+      <a href="/historial_reservas" class="hover:text-[#2B6398] transition-colors">Historial de Reservas</a>
+      <span class="material-icons text-sm">chevron_right</span>
+      <span class="text-gray-900 font-medium">Detalles de la reserva</span>
+    </div>
+
+    <div class="mb-6">
+      <h1 class="text-2xl font-bold text-gray-900">Detalles de la reserva</h1>
+    </div>
+
+    <div class="flex flex-col gap-6">
+      <!-- Order Summary Card -->
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+        <div class="bg-gray-100 px-4 sm:px-6 py-4 border-b border-gray-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div class="flex flex-wrap gap-6 sm:gap-10 text-sm text-gray-600">
+            <div class="flex flex-col">
+              <span class="uppercase text-[11px] font-bold text-gray-500 tracking-wider mb-1">Reserva realizada</span>
+              <span class="text-gray-900 font-medium">4 de Marzo de 2026</span>
+            </div>
+          </div>
+          <div class="flex flex-col items-start sm:items-end text-sm">
+            <span class="uppercase text-[11px] font-bold text-gray-500 tracking-wider mb-1">N° Reserva</span>
+            <span class="text-gray-900 font-medium">RES-10492</span>
+          </div>
+        </div>
+
+        <div class="p-4 sm:p-6 grid grid-cols-1 md:grid-cols-3 gap-8">
+          <!-- Dirección -->
+          <div class="flex flex-col gap-2">
+            <h3 class="font-bold text-gray-900 text-base mb-1">Dirección de envío</h3>
+            <p class="text-sm text-gray-700">
+              <span class="font-medium">Juan Pérez</span><br>
+              Av. Tecnológico 123<br>
+              Col. Solidaridad, C.P. 20190<br>
+              Aguascalientes, Ags.<br>
+              México
+            </p>
+          </div>
+
+          <!-- Información Adicional -->
+          <div class="flex flex-col gap-2">
+            <h3 class="font-bold text-gray-900 text-base mb-1">Información del envío</h3>
+            <p class="text-sm text-gray-700">
+              <span class="font-medium">Sucursal origen:</span> Centro<br>
+              <span class="font-medium">Peso total:</span> 14.5 kg<br>
+            </p>
+          </div>
+
+          <!-- Resumen financiero -->
+          <div class="flex flex-col gap-2 bg-gray-50 p-4 rounded-md border border-gray-100">
+            <h3 class="font-bold text-gray-900 text-base mb-2">Resumen de la reserva</h3>
+            <div class="flex justify-between text-sm text-gray-600 mb-1">
+              <span>Productos:</span>
+              <span>$10,478.00</span>
+            </div>
+            <div class="flex justify-between text-sm text-gray-600 mb-1">
+              <span>Envío:</span>
+              <span>$0.00</span>
+            </div>
+            <div class="flex justify-between text-sm text-gray-600 mb-2 pb-2 border-b border-gray-200">
+              <span>IVA (16%):</span>
+              <span>$1,676.48</span>
+            </div>
+            <div class="flex justify-between text-base font-bold text-gray-900">
+              <span>Total:</span>
+              <span>$12,154.48</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Products List -->
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+        <div class="px-4 sm:px-6 py-4 border-b border-gray-200">
+          <h2 class="text-lg font-bold text-gray-900">Productos reservados</h2>
+        </div>
+        
+        <div class="p-4 sm:p-6 flex flex-col gap-6">
+          <!-- Producto 1 -->
+          <div class="flex flex-col sm:flex-row items-start gap-4 sm:gap-6">
+            <div class="w-24 h-24 sm:w-32 sm:h-32 flex-shrink-0 bg-white rounded-md border border-gray-200 p-2 flex items-center justify-center">
+              <img src="https://placehold.co/400x400/ffffff/cccccc?text=DC3000" alt="DeltronNXT DC3000" class="max-h-full max-w-full object-contain">
+            </div>
+            <div class="flex flex-col flex-grow w-full">
+              <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 w-full">
+                <div>
+                  <a href="#" class="text-base sm:text-lg font-medium text-[#2B6398] hover:text-orange-600 hover:underline">DeltronNXT DC3000</a>
+                  <div class="text-sm text-gray-500 mt-1 space-y-1">
+                    <p>Unidad de venta: <span class="text-gray-900">3.75 Litros</span></p>
+                    <p>Cantidad: <span class="text-gray-900">2</span></p>
+                  </div>
+                </div>
+                <div class="text-left sm:text-right">
+                  <span class="text-lg font-bold text-gray-900">$6,850.00</span>
+                </div>
+              </div>
+              <div class="flex flex-wrap gap-3 items-center mt-4">
+                <button class="bg-[#2B6398] hover:bg-[#24537e] text-white px-4 py-2 rounded-md text-sm font-medium shadow-sm transition-colors">Ver artículo</button>
+                <button class="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-md text-sm font-medium shadow-sm hover:bg-gray-50 transition-colors flex items-center gap-1">
+                  <span class="material-icons text-[18px]">rate_review</span>
+                  Añadir reseña
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <hr class="border-gray-100">
+
+          <!-- Producto 2 -->
+          <div class="flex flex-col sm:flex-row items-start gap-4 sm:gap-6">
+            <div class="w-24 h-24 sm:w-32 sm:h-32 flex-shrink-0 bg-white rounded-md border border-gray-200 p-2 flex items-center justify-center">
+              <img src="https://placehold.co/400x400/ffffff/cccccc?text=Turbo+Finish" alt="Turbo Finish" class="max-h-full max-w-full object-contain">
+            </div>
+            <div class="flex flex-col flex-grow w-full">
+              <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 w-full">
+                <div>
+                  <a href="#" class="text-base sm:text-lg font-medium text-[#2B6398] hover:text-orange-600 hover:underline">Turbo Finish - Barniz de poliuretano</a>
+                  <div class="text-sm text-gray-500 mt-1 space-y-1">
+                    <p>Unidad de venta: <span class="text-gray-900">0.788 Litros</span></p>
+                    <p>Cantidad: <span class="text-gray-900">1</span></p>
+                  </div>
+                </div>
+                <div class="text-left sm:text-right">
+                  <span class="text-lg font-bold text-gray-900">$2,400.00</span>
+                </div>
+              </div>
+              <div class="flex flex-wrap gap-3 items-center mt-4">
+                <button class="bg-[#2B6398] hover:bg-[#24537e] text-white px-4 py-2 rounded-md text-sm font-medium shadow-sm transition-colors">Ver artículo</button>
+                <button class="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-md text-sm font-medium shadow-sm hover:bg-gray-50 transition-colors flex items-center gap-1">
+                  <span class="material-icons text-[18px]">rate_review</span>
+                  Añadir reseña
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <hr class="border-gray-100">
+
+          <!-- Producto 3 -->
+          <div class="flex flex-col sm:flex-row items-start gap-4 sm:gap-6">
+            <div class="w-24 h-24 sm:w-32 sm:h-32 flex-shrink-0 bg-white rounded-md border border-gray-200 p-2 flex items-center justify-center">
+              <img src="https://placehold.co/400x400/ffffff/cccccc?text=Top+Cars" alt="Top Cars DMD1684" class="max-h-full max-w-full object-contain">
+            </div>
+            <div class="flex flex-col flex-grow w-full">
+              <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 w-full">
+                <div>
+                  <a href="#" class="text-base sm:text-lg font-medium text-[#2B6398] hover:text-orange-600 hover:underline">Top Cars DMD1684 Base Color</a>
+                  <div class="text-sm text-gray-500 mt-1 space-y-1">
+                    <p>Unidad de venta: <span class="text-gray-900">Pieza</span></p>
+                    <p>Cantidad: <span class="text-gray-900">1</span></p>
+                  </div>
+                </div>
+                <div class="text-left sm:text-right">
+                  <span class="text-lg font-bold text-gray-900">$1,228.00</span>
+                </div>
+              </div>
+              <div class="flex flex-wrap gap-3 items-center mt-4">
+                <button class="bg-[#2B6398] hover:bg-[#24537e] text-white px-4 py-2 rounded-md text-sm font-medium shadow-sm transition-colors">Ver artículo</button>
+                <button class="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-md text-sm font-medium shadow-sm hover:bg-gray-50 transition-colors flex items-center gap-1">
+                  <span class="material-icons text-[18px]">rate_review</span>
+                  Añadir reseña
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <%- include('partials/footer') %>
+</body>
+</html>
