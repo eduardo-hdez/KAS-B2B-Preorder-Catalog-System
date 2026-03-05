@@ -1,11 +1,14 @@
 <nav class="bg-[#262F3E] py-2">
     <div class="flex items-center justify-between">
+        <!-- Logo del sistema -->
         <div>
             <img/>
         </div>
+        <!-- Botón de Productos -->
         <div class="ml-4">
             <button class="bg-white text-[#262F3E] px-4 py-2 rounded-md hover:bg-gray-200">Productos</button>
         </div>
+        <!-- Barra de búsqueda -->
         <div class="flex w-96">
             <input 
                 type="text" 
@@ -13,13 +16,17 @@
                 class="flex-1 px-4 py-2 rounded-l-lg outline-none"
             />
             <button class="bg-[#2B6398] hover:bg-[#24537e] border-l-0 px-3 flex items-center justify-center rounded-r-lg">
-                <img src="/images/ui/search_icon.svg" alt="Buscar" class="h-6 w-6">
+                <span class="material-icons text-white text-2xl">search</span>
             </button>
         </div>
+        <!-- Acciones del empleado -->
         <div class="flex mr-4 items-center justify-center gap-8">
             <button class="bg-white text-[#262F3E] px-4 py-2 rounded-md hover:bg-gray-200">Historial de reservas</button>
             <button class="bg-white text-[#262F3E] px-4 py-2 rounded-md hover:bg-gray-200">Reporte</button>
-            <img src="/images/ui/user_icon.svg" alt="Icono de usuario" class="h-12" />
+            <!-- Icono de perfil -->
+            <button class="text-white hover:text-gray-300 flex items-center justify-center">
+                <span class="material-icons" style="font-size:2.8rem">account_circle</span>
+            </button>
         </div>
     </div>
-</nav>  
+</nav>
