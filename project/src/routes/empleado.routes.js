@@ -17,4 +17,8 @@ router.get('/tabla-reservas', (request, response) => {
   response.render('empleado/tabla-reservas', { title: 'Tabla de Reservas' });
 });
 
+router.get('/detalle-reserva', (request, response) => {
+  response.render('empleado/detalle-reserva', { title: 'Detalle de Reserva' });
+});
+
 module.exports = router;
