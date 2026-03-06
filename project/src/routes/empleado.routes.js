@@ -21,4 +21,8 @@ router.get('/detalle-reserva', (request, response) => {
   response.render('empleado/detalle-reserva', { title: 'Detalle de Reserva' });
 });
 
+router.get('/reporte', (request, response) => {
+  response.render('empleado/reporte', { title: 'Reporte' });
+});
+
 module.exports = router;
