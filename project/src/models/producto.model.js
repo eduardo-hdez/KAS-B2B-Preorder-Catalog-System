@@ -1,4 +1,4 @@
-import supabase from '../config/supabase.js'
+import supabase from '../config/supabase.js';
 
 export default class Producto {
     constructor(id, nombre, descripcion, precio, foto, pesoUnidad, unidadVenta, idCampania) {
@@ -29,16 +29,13 @@ export default class Producto {
 
     static async fetchAll() {
         const { data, error } = await supabase
-            .from('producto')
-            .select('*')
+            .rpc('get_catalogo_productos_habilitados')
         return { data, error }
     }
 
     static async findById(id) {
         const { data, error } = await supabase
-            .from('producto')
-            .select('*')
-            .eq('id_producto', id)
+            .rpc('get_producto_habilitado', { id_producto: id })
             .single()
         return { data, error }
     }
