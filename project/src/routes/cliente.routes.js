@@ -4,15 +4,11 @@ import * as productoController from '../controllers/producto.controller.js';
 const router = express.Router();
 
 router.get('/', productoController.renderCatalogoCliente);
-
 router.get('/catalogo', productoController.renderCatalogoCliente);
+router.get('/detalle-producto/:id', productoController.renderDetalleProductoCliente);
 
 router.get('/carrito-reserva', (request, response) => {
   response.render('cliente/carrito-reserva', { title: 'Carrito' });
-});
-
-router.get('/detalle-producto', (request, response) => {
-  response.render('cliente/detalle-producto', { title: 'Detalle de Producto' });
 });
 
 router.get('/historial-reservas', (request, response) => {
