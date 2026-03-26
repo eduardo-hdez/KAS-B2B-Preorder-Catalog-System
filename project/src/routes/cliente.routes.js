@@ -1,5 +1,6 @@
 import express from 'express';
 import * as productoController from '../controllers/producto.controller.js';
+import * as carritoController from '../controllers/carrito.controller.js';
 import {postCambiarCuenta} from '../controllers/cuenta.controller.js';
 import {requireRol, ROL_CLIENTE} from '../middleware/auth.middleware.js';
 
@@ -10,9 +11,8 @@ router.get('/', productoController.renderCatalogoCliente);
 router.get('/catalogo', productoController.renderCatalogoCliente);
 router.get('/detalle-producto/:id', productoController.renderDetalleProductoCliente);
 
-router.get('/carrito-reserva', (request, response) => {
-  response.render('cliente/carrito-reserva', {title: 'Carrito'});
-});
+router.get('/carrito-reserva', carritoController.renderCarritoCliente);
+router.post('/carrito/agregar', carritoController.agregarProductoCarrito);
 
 router.get('/historial-reservas', (request, response) => {
   response.render('cliente/historial-reservas', {title: 'Historial de Reservas'});
