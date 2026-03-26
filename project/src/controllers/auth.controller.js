@@ -5,7 +5,7 @@ const LOGIN_ERROR = 'Cuenta o contraseña incorrectos.';
 const ROLE_ERROR = 'Tu usuario no tiene un rol asignado. Contacta al administrador.';
 
 export function getLogin(request, response) {
-  if (request.session?.idUsuario && request.session?.idRol) {
+  if (request.session.idUsuario && request.session.idRol) {
     const dest = request.session.idRol === ROL_CLIENTE ? '/cliente' : '/empleado';
     return response.redirect(dest);
   }
@@ -13,8 +13,8 @@ export function getLogin(request, response) {
 }
 
 export async function postLogin(request, response) {
-  const cuenta = String(request.body?.cuenta ?? '').trim();
-  const password = request.body?.password;
+  const cuenta = String(request.body.cuenta).trim();
+  const password = request.body.password;
 
   const { data: user } = await Usuario.findUserWithRole(cuenta);
 
@@ -28,7 +28,6 @@ export async function postLogin(request, response) {
 
   request.session.idUsuario = user.id_usuario;
   request.session.idRol = user.id_rol;
-  if (user.nombre_rol) request.session.nombreRol = user.nombre_rol;
 
   response.redirect(user.id_rol === ROL_CLIENTE ? '/cliente' : '/empleado');
 }
