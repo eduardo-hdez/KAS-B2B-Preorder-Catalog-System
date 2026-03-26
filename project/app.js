@@ -1,6 +1,9 @@
 import express from 'express';
 import path from 'path';
+import session from 'express-session';
 import { fileURLToPath } from 'url';
+import 'dotenv/config';
+import authRoutes from './src/routes/auth.routes.js';
 import clienteRoutes from './src/routes/cliente.routes.js';
 import empleadoRoutes from './src/routes/empleado.routes.js';
 
@@ -10,17 +13,26 @@ const __dirname = path.dirname(__filename);
 const app = express();
 
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.urlencoded({ extended: true }));
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'src/views'));
 
 app.use(express.urlencoded({ extended: true }));
 
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: { httpOnly: true },
+}));
+
+app.use(authRoutes);
 app.use('/cliente', clienteRoutes);
 app.use('/empleado', empleadoRoutes);
 
 app.get('/', (request, response) => {
-  response.redirect('/cliente');
+  response.redirect('/login');
 });
 
 app.listen(3000);

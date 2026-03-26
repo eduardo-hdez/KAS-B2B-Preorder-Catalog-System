@@ -1,0 +1,155 @@
+import campanaModel from'../models/campana.model.js';
+
+function toISODate(value) {
+  if (!value) return '';
+  return new Date(value).toISOString().split('T')[0];
+}
+
+/** Fecha enviada por input type="date": AAAA-MM-DD y día de calendario válido. */
+function isValidCampanaFechaInput(value) {
+  const s = String(value ?? '').trim();
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(s)) return false;
+  const [y, m, d] = s.split('-').map(Number);
+  const dt = new Date(Date.UTC(y, m - 1, d));
+  return (
+    !Number.isNaN(dt.getTime()) &&
+    dt.getUTCFullYear() === y &&
+    dt.getUTCMonth() === m - 1 &&
+    dt.getUTCDate() === d
+  );
+}
+
+function clasificarCampana(fechaInicio, fechaFin) {
+  const hoy = new Date();
+  hoy.setHours(0, 0, 0, 0);
+
+  const inicio = new Date(fechaInicio);
+  const fin = new Date(fechaFin);
+  inicio.setHours(0, 0, 0, 0);
+  fin.setHours(0, 0, 0, 0);
+
+  if (fin < hoy) return 'pasada';
+  if (inicio > hoy) return 'programada';
+  return 'actual';
+}
+
+async function renderCampanas(request, response) {
+  try {
+    const campanasDb = await campanaModel.listarCampanas();
+
+    const campanas = campanasDb.map((item) => ({
+      id: item.id,
+      nombre: item.nombre,
+      fechaInicio: toISODate(item.fechaInicio),
+      fechaFin: toISODate(item.fechaFin),
+      estadoCalculado: clasificarCampana(item.fechaInicio, item.fechaFin),
+    }));
+
+    return response.render('empleado/campaña', {
+      title: 'Campañas',
+      campanasPasadas: campanas.filter((c) => c.estadoCalculado === 'pasada'),
+      campanaActual: campanas.filter((c) => c.estadoCalculado === 'actual'),
+      campanasProgramadas: campanas.filter((c) => c.estadoCalculado === 'programada'),
+    });
+  } catch (error) {
+    console.error('Error al listar campañas:', error.message);
+    return response.status(500).render('empleado/campaña', {
+      title: 'Campañas',
+      campanasPasadas: [],
+      campanaActual: [],
+      campanasProgramadas: [],
+    });
+  }
+}
+
+function renderNuevaCampana(request, response) {
+  return response.render('empleado/campaña-nueva', {
+    title: 'Nueva campaña',
+    error: null,
+    form: {},
+  });
+}
+
+async function crearCampanaPost(request, response) {
+  const idCampana = String(request.body.idCampana || '').trim();
+  const nombreCampana = String(request.body.nombreCampana || '').trim();
+  const fi = String(request.body.fechaInicio ?? '').trim();
+  const ff = String(request.body.fechaFin ?? '').trim();
+  const banners = request.body.banners;
+  const tiempoCancelacion = request.body.tiempoCancelacion;
+
+  const form = {
+    idCampana,
+    nombreCampana,
+    fechaInicio: fi,
+    fechaFin: ff,
+    banners: banners != null ? String(banners) : '',
+    tiempoCancelacion:
+      tiempoCancelacion !== undefined && tiempoCancelacion !== null
+        ? String(tiempoCancelacion)
+        : '',
+  };
+
+  if (!idCampana || !nombreCampana || !fi || !ff) {
+    return response.status(400).render('empleado/campaña-nueva', {
+      title: 'Nueva campaña',
+      error: 'Indica el id de la campaña, el nombre y ambas fechas.',
+      form,
+    });
+  }
+
+  if (!isValidCampanaFechaInput(fi) || !isValidCampanaFechaInput(ff)) {
+    return response.status(400).render('empleado/campaña-nueva', {
+      title: 'Nueva campaña',
+      error:
+        'Las fechas deben ser válidas (formato AAAA-MM-DD, día de calendario correcto).',
+      form,
+    });
+  }
+
+  const inicioMs = Date.parse(`${fi}T00:00:00.000Z`);
+  const finMs = Date.parse(`${ff}T00:00:00.000Z`);
+  if (finMs < inicioMs) {
+    return response.status(400).render('empleado/campaña-nueva', {
+      title: 'Nueva campaña',
+      error: 'La fecha final debe ser la misma o posterior a la fecha de inicio.',
+      form,
+    });
+  }
+
+  try {
+    await campanaModel.crearCampana({
+      id: idCampana,
+      nombre: nombreCampana,
+      fechaInicio: fi,
+      fechaFin: ff,
+      banner: banners, 
+      tiempoCancelacion,
+    });
+    return response.redirect('/empleado/campanas');
+  } catch (error) {
+    console.error('Error al crear campaña:', error.message);
+    return response.status(500).render('empleado/campaña-nueva', {
+      title: 'Nueva campaña',
+      error:
+        error.message ||
+        'No se pudo guardar la campaña. Comprueba columnas y permisos en Supabase.',
+      form,
+    });
+  }
+}
+
+function renderBannersCampana(request, response) {
+  return response.render('empleado/campaña-banners', {
+    title: 'Banners de la campaña',
+    campanaId: request.params.id,
+  });
+}
+
+
+export default {
+  renderCampanas,
+  renderNuevaCampana,
+  crearCampanaPost,
+  renderBannersCampana,
+};

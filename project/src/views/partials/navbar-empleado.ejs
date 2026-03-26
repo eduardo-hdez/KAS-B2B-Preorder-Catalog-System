@@ -22,11 +22,18 @@
         <!-- Acciones del empleado -->
         <div class="flex mr-4 items-center justify-center gap-8">
             <a href="/empleado/tabla-reservas" class="bg-white text-[#262F3E] px-4 py-2 rounded-md hover:bg-gray-200">Tabla de reservas</a>
+            <a href="/empleado/campanas" class="bg-white text-[#262F3E] px-4 py-2 rounded-md hover:bg-gray-200">Campañas</a>
             <a href="/empleado/reporte" class="bg-white text-[#262F3E] px-4 py-2 rounded-md hover:bg-gray-200">Reporte</a>
             <!-- Icono de perfil -->
             <button class="text-white hover:text-gray-300 flex items-center justify-center">
                 <span class="material-icons" style="font-size:2.8rem">account_circle</span>
             </button>
+            <!-- Boton de logout -->
+            <form action="/logout" method="POST">
+                <button type="submit" class="text-white hover:text-gray-300 flex items-center justify-center" aria-label="Cerrar sesion">
+                    <span class="material-icons" style="font-size:2.2rem">logout</span>
+                </button>
+            </form>
         </div>
     </div>
 </nav>

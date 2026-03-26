@@ -1,7 +1,9 @@
 import express from 'express';
 import * as productoController from '../controllers/producto.controller.js';
+import { requireRol, ROL_CLIENTE } from '../middleware/auth.middleware.js';
 
 const router = express.Router();
+router.use(requireRol([ROL_CLIENTE]));
 
 router.get('/', productoController.renderCatalogoCliente);
 router.get('/catalogo', productoController.renderCatalogoCliente);
