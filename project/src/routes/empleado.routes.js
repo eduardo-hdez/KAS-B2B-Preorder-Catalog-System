@@ -1,7 +1,9 @@
 import express from 'express';
 import * as productoController from '../controllers/producto.controller.js';
+import { requireRol, ROL_EMPLEADO } from '../middleware/auth.middleware.js';
 
 const router = express.Router();
+router.use(requireRol([ROL_EMPLEADO]));
 
 router.get('/', (request, response) => {
   response.render('empleado/catalogo-productos', { title: 'Catalogo de Productos' });
