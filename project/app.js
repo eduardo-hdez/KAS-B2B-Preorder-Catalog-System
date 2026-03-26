@@ -27,6 +27,13 @@ app.use(session({
   cookie: { httpOnly: true },
 }));
 
+// Hacer que la variable este disponible en todas las vistas
+app.use((req, res, next) => {
+  res.locals.concesionarias = req.session.concesionarias ?? [];
+  res.locals.idConcesionaria = req.session.idConcesionaria ?? null;
+  next();
+});
+
 app.use(authRoutes);
 app.use('/cliente', clienteRoutes);
 app.use('/empleado', empleadoRoutes);

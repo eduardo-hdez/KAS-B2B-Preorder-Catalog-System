@@ -1,4 +1,5 @@
 import Usuario from '../models/usuario.model.js';
+import Concesionaria from '../models/concesionaria.model.js';
 import { ROL_CLIENTE, ROL_EMPLEADO } from '../middleware/auth.middleware.js';
 
 const LOGIN_ERROR = 'Correo o contraseña incorrectos.';
@@ -29,7 +30,15 @@ export async function postLogin(request, response) {
   request.session.idUsuario = user.id_usuario;
   request.session.idRol = user.id_rol;
 
-  response.redirect(user.id_rol === ROL_CLIENTE ? '/cliente' : '/empleado');
+  if (user.id_rol === ROL_CLIENTE) {
+    const { data: poseer } = await Concesionaria.findByUsuario(user.id_usuario);
+    const concesionarias = (poseer ?? []).map(p => p.id_concesionaria);
+    request.session.concesionarias = concesionarias;
+    request.session.idConcesionaria = concesionarias[0] ?? null;
+    return response.redirect('/cliente');
+  }
+
+  response.redirect('/empleado');
 }
 
 export function postLogout(request, response) {

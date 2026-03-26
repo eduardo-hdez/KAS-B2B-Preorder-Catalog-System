@@ -1,5 +1,6 @@
 import express from 'express';
 import * as productoController from '../controllers/producto.controller.js';
+import { postCambiarCuenta } from '../controllers/cuenta.controller.js';
 import { requireRol, ROL_CLIENTE } from '../middleware/auth.middleware.js';
 
 const router = express.Router();
@@ -24,5 +25,7 @@ router.get('/detalle-reserva', (request, response) => {
 router.get('/info-perfil', (request, response) => {
   response.render('cliente/info-perfil', { title: 'Información del Perfil' });
 });
+
+router.post('/cambiar-cuenta', postCambiarCuenta);
 
 export default router;
