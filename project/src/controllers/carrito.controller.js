@@ -1,4 +1,5 @@
 import Carrito from '../models/carrito.model.js';
+import Concesionaria from '../models/concesionaria.model.js';
 
 async function getOrCreateCarrito(idConcesionaria) {
   const {data: carrito, error: errorGet} = await Carrito.getCartById(idConcesionaria);
@@ -38,14 +39,25 @@ export async function renderCarritoCliente(request, response) {
   const idConcesionaria = request.session.idConcesionaria;
   if (!idConcesionaria) return response.redirect('/login');
 
-  const {carrito, error} = await getOrCreateCarrito(idConcesionaria);
+  // Ambas consultas corren en paralelo para reducir tiempo de espera
+  const [{carrito, error}, {data: sucursales}] = await Promise.all([
+    getOrCreateCarrito(idConcesionaria),
+    Concesionaria.getSucursales(idConcesionaria),
+  ]);
+
   if (error) {
     return response.status(500).render('cliente/carrito-reserva', {
       title: 'Carrito',
       carrito: null,
+      sucursales: [],
       errorCarrito: 'Error al obtener el carrito',
     });
   }
 
-  return response.render('cliente/carrito-reserva', {title: 'Carrito', carrito, errorCarrito: null});
+  return response.render('cliente/carrito-reserva', {
+    title: 'Carrito',
+    carrito,
+    sucursales: sucursales ?? [],
+    errorCarrito: null,
+  });
 }
