@@ -55,20 +55,20 @@ export async function renderCatalogoCliente(request, response) {
 }
 
 export function anadirProducto(request, response, next) {
-    const producto = new Producto(request.body.idProducto, request.body.nombreProducto,
-        request.body.descripcion, request.body.precio, request.body.foto,
-        request.body.pesoUnidad, request.body.unidadVenta, request.body.idCampania); //instancia de la clase
-    producto.save()
-        .then(({ data, error }) => {
-            if (error) {
-                console.log(error);
-                throw error;
-            }
-            return response.redirect('/empleado/gestion-productos/anadir-producto?success=1');
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+  const producto = new Producto(request.body.idProducto, request.body.nombreProducto,
+    request.body.descripcion, request.body.precio, request.body.foto,
+    request.body.pesoUnidad, request.body.unidadVenta, request.body.idCampania); //instancia de la clase
+  producto.save()
+    .then(({ data, error }) => {
+      if (error) {
+        console.log(error);
+        throw error;
+      }
+      return response.redirect('/empleado/gestion-productos/anadir-producto?success=1');
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 }
 
 export async function renderGestionProductos(request, response) {
@@ -90,5 +90,31 @@ export async function renderGestionProductos(request, response) {
       productos: [],
       errorCatalogo: 'No se pudieron cargar los productos en este momento.'
     });
+  }
+}
+
+export async function deshabilitarProductos(request, response) {
+  try {
+    let productosSeleccionados = request.body.productosSeleccionados || [];
+
+    if (!Array.isArray(productosSeleccionados)) {
+      productosSeleccionados = [productosSeleccionados];
+    }
+
+    if (productosSeleccionados.length === 0) {
+      return response.redirect('/empleado/gestion-productos?error=sin-seleccion');
+    }
+
+    const { data, error } = await Producto.deshabilitar(productosSeleccionados);
+
+    if (error) {
+      console.error(error);
+      return response.redirect('/empleado/gestion-productos?error=deshabilitar');
+    }
+    return response.redirect('/empleado/gestion-productos?success=deshabilitados');
+
+  } catch (error) {
+    console.error(error);
+    return response.redirect('/empleado/gestion-productos?error=deshabilitar');
   }
 }

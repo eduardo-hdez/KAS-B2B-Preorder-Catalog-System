@@ -24,6 +24,8 @@ router.get('/gestion-productos/anadir-producto', (request, response) => {
 
 router.post('/gestion-productos/anadir-producto', productoController.anadirProducto);
 
+router.post('/gestion-productos/deshabilitar', productoController.deshabilitarProductos);
+
 router.get('/tabla-reservas', (request, response) => {
   response.render('empleado/tabla-reservas', { title: 'Tabla de Reservas' });
 });

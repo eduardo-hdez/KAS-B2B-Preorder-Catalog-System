@@ -39,4 +39,12 @@ export default class Producto {
             .single()
         return { data, error }
     }
+
+    static async deshabilitar(ids) {
+        const { data, error } = await supabase
+            .from('producto')
+            .update({ habilitado: false })
+            .in('id_producto', ids);
+        return { data, error };
+    }
 }
