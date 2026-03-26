@@ -24,21 +24,21 @@ export default class Carrito {
     const {data, error} = await supabase
         .from('carrito')
         .select(`
-                id_carrito,
-                id_concesionaria,
-                productos_seleccionados (
-                    cantidad,
-                    productos (
-                        id_producto,
-                        nombre,
-                        precio,
-                        foto,
-                        unidad_venta
-                    )
-                )
-            `)
+          id_carrito,
+          id_concesionaria,
+          productos_seleccionados (
+            cantidad,
+            producto (
+              id_producto,
+              nombre_producto,
+              precio_producto,
+              foto_producto,
+              unidad_venta_producto
+            )
+          )
+        `)
         .eq('id_concesionaria', id_concesionaria)
-        .single();
+        .maybeSingle();
     return {data, error};
   }
 
