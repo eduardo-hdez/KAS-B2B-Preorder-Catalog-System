@@ -8,54 +8,30 @@ async function getOrCreateCarrito(idConcesionaria) {
   const {data: created, error: errorCreate} = await Carrito.createNewCart(idConcesionaria);
   if (errorCreate) return {carrito: null, error: errorCreate};
 
-  return {
-    carrito: {
-      ...(created ?? {}),
-      productos_seleccionados: [],
-    },
-    error: null,
-  };
-}
-
-export async function crearCarrito(request, response) {
-  const idConcesionaria = request.session.idConcesionaria;
-  if (!idConcesionaria) return response.redirect('/login');
-
-  const {error} = await getOrCreateCarrito(idConcesionaria);
-  if (error) {
-    return response.status(500).render('cliente/carrito-reserva', {
-      title: 'Carrito',
-      carrito: null,
-      errorCarrito: 'Error al crear el carrito',
-    });
-  }
-
-  return response.redirect('/cliente/carrito-reserva');
+  return {carrito: {...(created ?? {}), productos_seleccionados: []}, error: null};
 }
 
 export async function agregarProductoCarrito(request, response) {
   const idConcesionaria = request.session.idConcesionaria;
   if (!idConcesionaria) return response.redirect('/login');
 
-  const idProducto = request.body.id_producto ?? request.body.idProducto;
-  const cantidadRaw = request.body.cantidad ?? 1;
-  const cantidad = Math.max(1, Number(cantidadRaw) || 1);
+  const idProducto = request.body.id_producto;
+  const cantidad = Math.max(1, Number(request.body.cantidad) || 1);
 
-  if (!idProducto) {
-    return response.redirect('/cliente/carrito-reserva?error=sin-producto');
-  }
+  if (!idProducto) return response.redirect('/cliente/catalogo');
 
   const {carrito, error: errorCart} = await getOrCreateCarrito(idConcesionaria);
-  if (errorCart || !carrito?.id_carrito) {
-    return response.redirect('/cliente/carrito-reserva?error=carrito');
+  if (errorCart || !carrito?.id_carrito) return response.redirect('/cliente/catalogo');
+
+  const productosEnCarrito = Array.isArray(carrito.productos_seleccionados) ? carrito.productos_seleccionados : [];
+  const yaEstaEnCarrito = productosEnCarrito.some((ps) => ps.producto?.id_producto === idProducto);
+
+  if (!yaEstaEnCarrito) {
+    const {error: errorInsert} = await Carrito.insertToCart(carrito.id_carrito, idProducto, cantidad);
+    if (errorInsert) return response.redirect('/cliente/catalogo');
   }
 
-  const {error: errorInsert} = await Carrito.insertToCart(carrito.id_carrito, idProducto, cantidad);
-  if (errorInsert) {
-    return response.redirect('/cliente/carrito-reserva?error=agregar');
-  }
-
-  return response.redirect('/cliente/carrito-reserva?success=agregado');
+  return response.redirect('/cliente/catalogo');
 }
 
 export async function renderCarritoCliente(request, response) {
@@ -71,9 +47,5 @@ export async function renderCarritoCliente(request, response) {
     });
   }
 
-  return response.render('cliente/carrito-reserva', {
-    title: 'Carrito',
-    carrito,
-    errorCarrito: null,
-  });
+  return response.render('cliente/carrito-reserva', {title: 'Carrito', carrito, errorCarrito: null});
 }
