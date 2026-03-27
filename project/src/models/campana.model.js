@@ -56,6 +56,20 @@ function buildInsertRow(payload) {
 }
 
 
+async function getCampanaActiva() {
+  const supabase = await getSupabase();
+  const hoy = new Date().toISOString().slice(0, 10);
+  const {data, error} = await supabase
+      .from('campana')
+      .select('id_campana')
+      .lte('fecha_inicio', hoy)
+      .gte('fecha_fin', hoy)
+      .limit(1)
+      .maybeSingle();
+  if (error) throw error;
+  return data;
+}
+
 async function crearCampana(payload) {
   const supabase = await getSupabase();
   const row = buildInsertRow(payload);
@@ -65,4 +79,4 @@ async function crearCampana(payload) {
 }
 
 
-export default {listarCampanas, crearCampana};
+export default {listarCampanas, crearCampana, getCampanaActiva};
