@@ -56,5 +56,4 @@ export default class Carrito {
         .insert({id_carrito, id_producto, cantidad});
     return {data, error};
   }
-
 }
