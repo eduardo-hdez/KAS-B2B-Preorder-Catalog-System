@@ -80,22 +80,20 @@ export function postAnadirProducto(request, response, next) {
 
 export async function renderGestionProductos(request, response) {
   try {
-    const { data, error } = await Producto.fetchAll();
-
+    const { data, error } = await Producto.fetchAllGestion();
     if (error) {
       throw error;
     }
-
     response.render('empleado/gestion-productos', {
       title: 'Gestión de Productos',
       productos: data || [],
-      errorCatalogo: null
+      error: null
     });
   } catch (error) {
     response.status(500).render('empleado/gestion-productos', {
       title: 'Gestión de Productos',
       productos: [],
-      errorCatalogo: 'No se pudieron cargar los productos en este momento.'
+      error: 1
     });
   }
 }

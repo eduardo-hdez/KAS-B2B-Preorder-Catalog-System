@@ -27,6 +27,12 @@ export default class Producto {
             }]);
     }
 
+    static async fetchAllGestion() {
+        const { data, error } = await supabase
+            .rpc('get_productos_campania')    //campaña actual (hardcodeada)
+        return { data, error }
+    }
+
     static async fetchAll() {
         const { data, error } = await supabase
             .rpc('get_catalogo_productos_habilitados')
