@@ -35,6 +35,22 @@ export async function agregarProductoCarrito(request, response) {
   return response.redirect('/cliente/catalogo');
 }
 
+export async function eliminarProductoCarrito(request, response) {
+  const idConcesionaria = request.session.idConcesionaria;
+  if (!idConcesionaria) return response.redirect('/login');
+
+  const idProducto = request.body.id_producto;
+  if (!idProducto) return response.redirect('/cliente/carrito-reserva');
+
+  const {data: carrito, error} = await Carrito.getCartById(idConcesionaria);
+  if (error || !carrito?.id_carrito) return response.redirect('/cliente/carrito-reserva');
+
+  const {error: errorRemove} = await Carrito.removeFromCart(carrito.id_carrito, idProducto);
+  if (errorRemove) return response.redirect('/cliente/carrito-reserva');
+
+  return response.redirect('/cliente/carrito-reserva');
+}
+
 export async function renderCarritoCliente(request, response) {
   const idConcesionaria = request.session.idConcesionaria;
   if (!idConcesionaria) return response.redirect('/login');

@@ -14,6 +14,7 @@ router.get('/detalle-producto/:id', productoController.renderDetalleProductoClie
 
 router.get('/carrito-reserva', carritoController.renderCarritoCliente);
 router.post('/carrito/agregar', carritoController.agregarProductoCarrito);
+router.post('/carrito/eliminar', carritoController.eliminarProductoCarrito);
 router.post('/reserva/confirmar', confirmarReserva);
 
 router.get('/historial-reservas', (request, response) => {

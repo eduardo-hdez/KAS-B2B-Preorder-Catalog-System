@@ -50,6 +50,15 @@ export default class Carrito {
     return {data, error};
   }
 
+  static async removeFromCart(id_carrito, id_producto) {
+    const {data, error} = await supabase
+        .from('productos_seleccionados')
+        .delete()
+        .eq('id_carrito', id_carrito)
+        .eq('id_producto', id_producto);
+    return {data, error};
+  }
+
   static async insertToCart(id_carrito, id_producto, cantidad) {
     const {data, error} = await supabase
         .from('productos_seleccionados')
