@@ -18,10 +18,12 @@ export default class Reserva {
   }
 
   static async crear(folio, id_concesionaria, id_sucursal, id_campaña) {
-    const fecha_reserva = new Date().toISOString().slice(0, 10);
-    const {data, error} = await supabase
+    const ahora = new Date();
+    const fecha_reserva = ahora.toISOString().slice(0, 10);
+    const fecha_hora_reserva = ahora.toISOString();
+    let {data, error} = await supabase
         .from('reserva')
-        .insert({folio, fecha_reserva, estado_reserva: true, id_concesionaria, id_sucursal, id_campaña})
+        .insert({folio, fecha_reserva, fecha_hora_reserva, estado_reserva: true, id_concesionaria, id_sucursal, id_campaña})
         .select()
         .single();
 
@@ -29,7 +31,7 @@ export default class Reserva {
     if (missingIdCampana) {
       ({data, error} = await supabase
           .from('reserva')
-          .insert({...base, 'id_campana': id_campana})
+          .insert({folio, fecha_reserva, fecha_hora_reserva, estado_reserva: true, id_concesionaria, id_sucursal, 'id_campana': id_campaña})
           .select()
           .single());
     }

@@ -4,7 +4,7 @@ import Campana from '../models/campana.model.js';
 import {enviarConfirmacionReserva} from '../services/email.service.js';
 
 function getFechaBaseReserva(reserva) {
-  return reserva?.fecha_reserva;
+  return reserva?.fecha_hora_reserva || reserva?.fecha_reserva;
 }
 
 function getCampanaId(reserva) {
@@ -62,7 +62,7 @@ function mapReservaView(reserva) {
     folio: reserva.folio,
     estadoReserva,
     estadoTexto,
-    fechaReserva: reserva.fecha_reserva || '',
+    fechaReserva: reserva.fecha_hora_reserva || reserva.fecha_reserva || '',
     fechaCancelacion: reserva.fecha_cancelacion || null,
     sucursal: reserva.nombre_sucursal || 'N/D',
     total,
