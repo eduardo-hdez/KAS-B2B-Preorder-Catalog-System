@@ -57,6 +57,7 @@ CREATE TABLE public.producto (
   peso_unidad double precision NOT NULL,
   unidad_venta_producto text NOT NULL,
   id_campana bigint NOT NULL,
+  id_campana bigint NOT NULL,
   habilitado boolean NOT NULL DEFAULT true,
   CONSTRAINT producto_pkey PRIMARY KEY (id_producto),
   CONSTRAINT producto_id_campana_fkey FOREIGN KEY (id_campana) REFERENCES public.campana(id_campana)
@@ -91,6 +92,7 @@ CREATE TABLE public.reserva (
   fecha_cancelacion text,
   id_concesionaria bigint NOT NULL,
   id_sucursal bigint NOT NULL,
+  fecha_hora_reserva timestamp with time zone NOT NULL DEFAULT now(),
   id_campana bigint NOT NULL,
   CONSTRAINT reserva_pkey PRIMARY KEY (folio),
   CONSTRAINT reserva_id_concesionaria_fkey FOREIGN KEY (id_concesionaria) REFERENCES public.concesionaria(id_concesionaria),

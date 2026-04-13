@@ -1,10 +1,10 @@
 import Producto from '../models/producto.model.js';
 
 export async function renderDetalleProductoCliente(request, response) {
-  const {id} = request.params;
+  const { id } = request.params;
 
   try {
-    const {data, error} = await Producto.findById(id);
+    const { data, error } = await Producto.findById(id);
 
     if (error || data == null) {
       console.log(error);
@@ -34,7 +34,7 @@ export async function renderDetalleProductoCliente(request, response) {
 
 export async function renderCatalogoCliente(request, response) {
   try {
-    const {data, error} = await Producto.fetchAll();
+    const { data, error } = await Producto.fetchAll();
 
     if (error) {
       throw error;
@@ -54,41 +54,52 @@ export async function renderCatalogoCliente(request, response) {
   }
 }
 
-export function anadirProducto(request, response, next) {
+export async function renderAnadirProducto(request, response) {
+  const success = request.query.success === '1';
+  const error = request.query.error === '1';
+  response.render('empleado/anadir-producto', { title: 'Añadir Producto', success, error });
+}
+
+export function postAnadirProducto(request, response, next) {
   const producto = new Producto(request.body.idProducto, request.body.nombreProducto,
-      request.body.descripcion, request.body.precio, request.body.foto,
-      request.body.pesoUnidad, request.body.unidadVenta, request.body.idCampania); // instancia de la clase
+    request.body.descripcion, request.body.precio, request.body.foto,
+    request.body.pesoUnidad, request.body.unidadVenta, request.body.idCampana); // instancia de la clase
   producto.save()
-      .then(({data, error}) => {
-        if (error) {
-          console.log(error);
-          throw error;
-        }
-        return response.redirect('/empleado/gestion-productos/anadir-producto?success=1');
-      })
-      .catch((error) => {
+    .then(({ data, error }) => {
+      if (error) {
         console.log(error);
-      });
+        throw error;
+      }
+      return response.redirect('/empleado/gestion-productos/anadir-producto?success=1');
+    })
+    .catch((error) => {
+      console.log(error);
+      return response.redirect('/empleado/gestion-productos/anadir-producto?error=1');
+    });
 }
 
 export async function renderGestionProductos(request, response) {
+  const success = request.query.success;
+  const errorModificar = request.query.errorModificar === '1';
   try {
-    const {data, error} = await Producto.fetchAll();
-
+    const { data, error } = await Producto.fetchAllGestion();
     if (error) {
       throw error;
     }
-
     response.render('empleado/gestion-productos', {
       title: 'Gestión de Productos',
       productos: data || [],
-      errorCatalogo: null,
+      errorRecuperacion: null,
+      errorModificar,
+      success,
     });
   } catch (error) {
     response.status(500).render('empleado/gestion-productos', {
       title: 'Gestión de Productos',
       productos: [],
-      errorCatalogo: 'No se pudieron cargar los productos en este momento.',
+      errorRecuperacion: 1,
+      errorModificar,
+      success
     });
   }
 }
@@ -105,15 +116,15 @@ export async function deshabilitarProductos(request, response) {
       return response.redirect('/empleado/gestion-productos?error=sin-seleccion');
     }
 
-    const {error} = await Producto.deshabilitar(productosSeleccionados);
+    const { error } = await Producto.deshabilitar(productosSeleccionados);
 
     if (error) {
       console.error(error);
-      return response.redirect('/empleado/gestion-productos?error=deshabilitar');
+      throw error;
     }
-    return response.redirect('/empleado/gestion-productos?success=deshabilitados');
+    return response.redirect('/empleado/gestion-productos?success=deshabilitar');
+
   } catch (error) {
-    console.error(error);
-    return response.redirect('/empleado/gestion-productos?error=deshabilitar');
+    return response.redirect('/empleado/gestion-productos?errorModificar=1');
   }
 }

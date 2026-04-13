@@ -17,12 +17,11 @@ export default class Reserva {
     return `F-${ultimo + 1}`;
   }
 
-  static async crear(folio, id_concesionaria, id_sucursal, id_campana) {
-    const fecha_reserva = new Date().toISOString();
-    const base = {folio, fecha_reserva, estado_reserva: true, id_concesionaria, id_sucursal};
-    let {data, error} = await supabase
+  static async crear(folio, id_concesionaria, id_sucursal, id_campaña) {
+    const fecha_reserva = new Date().toISOString().slice(0, 10);
+    const {data, error} = await supabase
         .from('reserva')
-        .insert({...base, id_campana})
+        .insert({folio, fecha_reserva, estado_reserva: true, id_concesionaria, id_sucursal, id_campaña})
         .select()
         .single();
 
@@ -53,7 +52,7 @@ export default class Reserva {
         .from('reserva')
         .select('*')
         .eq('id_concesionaria', id_concesionaria)
-        .order('fecha_reserva', {ascending: false});
+        .order('fecha_hora_reserva', {ascending: false});
 
     if (error) return {data: null, error};
     if (!Array.isArray(reservas) || reservas.length === 0) return {data: [], error: null};
