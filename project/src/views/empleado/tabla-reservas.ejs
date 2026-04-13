@@ -22,6 +22,13 @@
             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <span class="material-icons text-gray-400 text-sm">search</span>
             </div>
+            <input type="text" id="busquedaFolio" placeholder="Buscar por folio..."
+              class="w-full pl-10 pr-3 border border-gray-300 rounded-lg py-2 text-sm focus:ring-[#007185] focus:border-[#007185]">
+          </div>
+          <div class="lg:col-span-3 relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <span class="material-icons text-gray-400 text-sm">search</span>
+            </div>
             <input type="text" id="busquedaConcesionaria" placeholder="Buscar por concesionaria..."
               class="w-full pl-10 pr-3 border border-gray-300 rounded-lg py-2 text-sm focus:ring-[#007185] focus:border-[#007185]">
           </div>
@@ -87,7 +94,7 @@
                   <!-- Reserva 1 (Más Reciente) -->
                   <div
                     class="card-reserva bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden flex flex-col"
-                    data-concesionaria="<%= reserva.nombre_concesionaria %>"
+                    data-folio="<%= reserva.folio %>" data-concesionaria="<%= reserva.nombre_concesionaria %>"
                     data-sucursal="<%= reserva.nombre_sucursal %>"
                     data-estado="<%= reserva.estado_reserva ? 'confirmada' : 'cancelada' %>"
                     data-fecha-reserva="<%= reserva.fecha_reserva %>">
@@ -209,15 +216,17 @@
             }
           });
         }
+        // Script de filtros de búsqueda
         document.getElementById('botonFiltrar').addEventListener('click', aplicarFiltros);
         const reservas = document.querySelectorAll('.card-reserva');
+        const busquedaFolio = document.getElementById('busquedaFolio');
         const busquedaConcesionaria = document.getElementById('busquedaConcesionaria');
         const busquedaSucursal = document.getElementById('busquedaSucursal');
         const filtroEstado = document.getElementById('filtroEstado');
         const filtroFecha = document.getElementById('filtroFecha');
 
         // También filtramos si el usuario presiona Enter en los inputs de búsqueda
-        [busquedaConcesionaria, busquedaSucursal].forEach(input => {
+        [busquedaConcesionaria, busquedaSucursal, busquedaFolio].forEach(input => {
           input.addEventListener('keypress', function (e) {
             if (e.key === 'Enter') aplicarFiltros();
           });
@@ -236,6 +245,7 @@
         }
         // Función para aplicar filtros
         function aplicarFiltros() {
+          const inputFolio = busquedaFolio.value.trim().toLowerCase();
           const inputConcesionaria = busquedaConcesionaria.value.trim().toLowerCase();
           const inputSucursal = busquedaSucursal.value.trim().toLowerCase();
           const estadoSeleccionado = filtroEstado.value;
@@ -243,6 +253,9 @@
 
           reservas.forEach(reserva => {
             if (!reserva.hasAttribute('data-estado')) return;
+
+            const folioReserva = reserva.dataset.folio ? reserva.dataset.folio.toLowerCase() : '';
+            const cumpleFolio = !inputFolio || folioReserva.includes(inputFolio);
 
             const nombreConcesionaria = reserva.dataset.concesionaria ? reserva.dataset.concesionaria.toLowerCase() : '';
             const cumpleConcesionaria = !inputConcesionaria || nombreConcesionaria.includes(inputConcesionaria);
@@ -255,7 +268,7 @@
             const fechaReserva = convertirFecha(reserva.dataset.fechaReserva);
             const cumpleFecha = !fechaSeleccionada || fechaReserva === fechaSeleccionada;
 
-            reserva.style.display = cumpleConcesionaria && cumpleSucursal && cumpleEstado && cumpleFecha ? '' : 'none';
+            reserva.style.display = cumpleFolio && cumpleConcesionaria && cumpleSucursal && cumpleEstado && cumpleFecha ? '' : 'none';
           });
         }
       </script>
