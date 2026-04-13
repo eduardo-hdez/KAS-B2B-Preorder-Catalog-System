@@ -57,6 +57,7 @@ export async function renderTablaReservas(request, response) {
           agrupadasMap.set(row.folio, {
             folio: row.folio,
             fecha_reserva: row.fecha_reserva,
+            precio_reserva: row.precio_reserva,
             estado_reserva: row.estado_reserva,
             nombre_concesionaria: row.nombre_concesionaria,
             nombre_sucursal: row.nombre_sucursal,

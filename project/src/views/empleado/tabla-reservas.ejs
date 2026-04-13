@@ -104,9 +104,7 @@
                         <div class="flex flex-col">
                           <span class="uppercase text-[11px] font-bold text-gray-500 tracking-wider mb-1">Total</span>
                           <span class="text-gray-900 font-medium">
-                            $<%= reserva.productos.reduce((total, p)=> total + (p.precio_producto *
-                              p.unidades_reservadas),
-                              0).toLocaleString('en-US', {minimumFractionDigits: 2}) %>
+                            $<%= (reserva.precio_reserva).toLocaleString('en-US', {minimumFractionDigits: 2}) %>
                           </span>
                         </div>
                         <div class="flex flex-col">
