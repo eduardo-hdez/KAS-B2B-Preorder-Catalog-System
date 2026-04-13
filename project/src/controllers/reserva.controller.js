@@ -78,12 +78,13 @@ export async function renderTablaReservas(request, response) {
     response.render('empleado/tabla-reservas', {
       title: 'Tabla de Reservas',
       reservas: agrupadas,
+      errorRecuperacion: null,
     });
   } catch (error) {
     response.status(500).render('empleado/tabla-reservas', {
       title: 'Tabla de Reservas',
       reservas: [],
-      error: 'No se pudo cargar la tabla de reservas en este momento.',
+      errorRecuperacion: 1,
     });
   }
 }
