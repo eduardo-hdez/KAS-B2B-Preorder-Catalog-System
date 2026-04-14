@@ -1,8 +1,8 @@
+import 'dotenv/config';
 import express from 'express';
 import path from 'path';
 import session from 'express-session';
 import { fileURLToPath } from 'url';
-import 'dotenv/config';
 import authRoutes from './src/routes/auth.routes.js';
 import clienteRoutes from './src/routes/cliente.routes.js';
 import empleadoRoutes from './src/routes/empleado.routes.js';
