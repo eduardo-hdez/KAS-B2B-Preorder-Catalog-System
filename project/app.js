@@ -55,4 +55,4 @@ app.get('/', (request, response) => {
   response.redirect('/login');
 });
 
-app.listen(3000);
+export default app;
