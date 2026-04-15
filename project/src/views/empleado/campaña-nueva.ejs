@@ -25,6 +25,7 @@
 
       <% const f = form || {}; %>
       <form method="post" action="/empleado/campanas/nueva" class="space-y-5">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
         <div>
           <label for="idCampana" class="block text-sm font-medium text-gray-700 mb-1">ID campaña</label>
           <input type="text" id="idCampana" name="idCampana" required

@@ -61,6 +61,7 @@
 
 <div class="flex flex-col gap-3">
               <form method="POST" action="/cliente/carrito/agregar">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                 <input type="hidden" name="id_producto" value="<%= producto.id_producto %>">
                 <input type="hidden" name="cantidad" value="1">
                 <button type="submit" class="w-full bg-[#2B6398] hover:bg-[#1e466b] text-white border border-[#1e466b] rounded-full py-3 px-6 font-medium flex justify-center items-center gap-2 text-lg transition-colors">

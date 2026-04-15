@@ -79,7 +79,7 @@ export async function renderCatalogoEmpleado(request, response) {
 export async function renderAnadirProducto(request, response) {
   const success = request.query.success === '1';
   const error = request.query.error === '1';
-  response.render('empleado/anadir-producto', { title: 'Añadir Producto', csrfToken: request.csrfToken(), success, error });
+  response.render('empleado/anadir-producto', { title: 'Añadir Producto', success, error });
 }
 
 export function postAnadirProducto(request, response, next) {

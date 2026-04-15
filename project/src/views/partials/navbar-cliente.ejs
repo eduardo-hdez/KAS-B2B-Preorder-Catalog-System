@@ -42,6 +42,7 @@
                         <div class="py-2">
                             <% concesionarias.forEach((c, i)=> { %>
                                 <form action="/cliente/cambiar-cuenta" method="POST" class="m-0">
+                                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                                     <input type="hidden" name="idConcesionaria" value="<%= c %>">
                                     <button type="submit"
                                         class="w-full text-left px-5 py-2.5 text-sm text-[#262F3E] hover:bg-slate-50 transition-colors duration-200 flex items-center gap-2 relative <%= c === idConcesionaria ? 'font-bold bg-slate-50' : 'font-medium' %>">
@@ -72,6 +73,7 @@
                         </a>
                         <!-- Boton de logout -->
                         <form action="/logout" method="POST" class="flex items-center justify-center m-0">
+                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                             <button type="submit"
                                 class="text-white/80 hover:text-white flex items-center justify-center transition-colors duration-200"
                                 aria-label="Cerrar sesion">

@@ -13,21 +13,34 @@
       <a href="/terminoscondiciones" class="hover:underline whitespace-nowrap text-sm">Términos y condiciones</a>
     </div>
   </div>
-  <div id="modalInvalidToken" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-    <div class="bg-white rounded-lg shadow-lg p-6 max-w-md text-center">
-      <h2 class="text-lg font-semibold mb-4">Sesión de formulario expirada</h2>
-      <p class="mb-6">Por seguridad el formulario expiró. Por favor recarga la página e inténtalo de nuevo.</p>
-      <button onclick="location.reload()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-        Recargar página
-      </button>
+  <div id="modalInvalidToken" tabindex="-1" aria-hidden="true"
+    class="hidden fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50 backdrop-blur-sm transition-opacity">
+    <div class="relative w-full max-w-md bg-white rounded-lg shadow-xl p-6 text-center border border-gray-200">
+      <span class="material-icons text-amber-500 text-5xl mb-4">warning</span>
+      <h3 class="mb-6 text-lg font-medium text-gray-800">La página o formulario expiró por seguridad. Por favor recarga
+        la página e inténtalo de nuevo.</h3>
+      <div class="flex flex-col sm:flex-row justify-center gap-3">
+        <button id="btnModalInvalidToken" type="button" onclick="location.reload()"
+          class="order-1 flex-1 text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 transition-colors">
+          Recargar página
+        </button>
+      </div>
     </div>
   </div>
   <script>
-    const url = new URL(window.location.href);
-    if (url.searchParams.get('invalidToken') === '1') {
-      document.getElementById('modalInvalidToken').classList.remove('hidden');
-      url.searchParams.delete('invalidToken');
-      window.history.replaceState({}, document.title, url.pathname + url.search);
+    const urlParams = new URL(window.location.href);
+    const modalInvalidToken = document.getElementById('modalInvalidToken');
+    if (urlParams.searchParams.get('invalidToken') === '1') {
+      modalInvalidToken.classList.remove('hidden');
+      urlParams.searchParams.delete('invalidToken');
+      window.history.replaceState({}, document.title, urlParams.pathname + urlParams.search);
+    }
+    if (modalInvalidToken) {
+      modalInvalidToken.addEventListener('click', (e) => {
+        if (e.target === modalInvalidToken) {
+          modalInvalidToken.classList.add('hidden');
+        }
+      });
     }
   </script>
 </footer>
