@@ -48,7 +48,7 @@ async function renderCampanas(request, response) {
       estadoCalculado: clasificarCampana(item.fechaInicio, item.fechaFin),
     }));
 
-    return response.render('empleado/campaña', {
+    return response.render('empleado/campana', {
       title: 'Campañas',
       campanasPasadas: campanas.filter((c) => c.estadoCalculado === 'pasada'),
       campanaActual: campanas.filter((c) => c.estadoCalculado === 'actual'),
@@ -56,7 +56,7 @@ async function renderCampanas(request, response) {
     });
   } catch (error) {
     console.error('Error al listar campañas:', error.message);
-    return response.status(500).render('empleado/campaña', {
+    return response.status(500).render('empleado/campana', {
       title: 'Campañas',
       campanasPasadas: [],
       campanaActual: [],
@@ -70,7 +70,7 @@ function renderNuevaCampana(request, response) {
   if (errorFromSession != null) {
     delete request.session[SESSION_NUEVA_CAMPANA_ERROR];
   }
-  return response.render('empleado/campaña-nueva', {
+  return response.render('empleado/campana-nueva', {
     title: 'Nueva campaña',
     error: errorFromSession,
     form: {},
@@ -99,7 +99,7 @@ async function crearCampanaPost(request, response) {
   };
 
   if (!idCampana || !nombreCampana || !fi || !ff) {
-    return response.status(400).render('empleado/campaña-nueva', {
+    return response.status(400).render('empleado/campana-nueva', {
       title: 'Nueva campaña',
       error: 'Indica el id de la campaña, el nombre y ambas fechas.',
       form,
@@ -107,7 +107,7 @@ async function crearCampanaPost(request, response) {
   }
 
   if (!isValidCampanaFechaInput(fi) || !isValidCampanaFechaInput(ff)) {
-    return response.status(400).render('empleado/campaña-nueva', {
+    return response.status(400).render('empleado/campana-nueva', {
       title: 'Nueva campaña',
       error:
         'Las fechas deben ser válidas (formato AAAA-MM-DD, día de calendario correcto).',
@@ -118,7 +118,7 @@ async function crearCampanaPost(request, response) {
   const inicioMs = Date.parse(`${fi}T00:00:00.000Z`);
   const finMs = Date.parse(`${ff}T00:00:00.000Z`);
   if (finMs < inicioMs) {
-    return response.status(400).render('empleado/campaña-nueva', {
+    return response.status(400).render('empleado/campana-nueva', {
       title: 'Nueva campaña',
       error: 'La fecha final debe ser la misma o posterior a la fecha de inicio.',
       form,
@@ -147,7 +147,7 @@ async function crearCampanaPost(request, response) {
     return response.redirect('/empleado/campanas');
   } catch (error) {
     console.error('Error al crear campaña:', error.message);
-    return response.status(500).render('empleado/campaña-nueva', {
+    return response.status(500).render('empleado/campana-nueva', {
       title: 'Nueva campaña',
       error:
         error.message ||
@@ -158,7 +158,7 @@ async function crearCampanaPost(request, response) {
 }
 
 function renderBannersCampana(request, response) {
-  return response.render('empleado/campaña-banners', {
+  return response.render('empleado/campana-banners', {
     title: 'Banners de la campaña',
     campanaId: request.params.id,
   });
