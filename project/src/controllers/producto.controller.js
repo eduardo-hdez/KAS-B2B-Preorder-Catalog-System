@@ -1,9 +1,12 @@
 import Producto from '../models/producto.model.js';
+import {uploadProductoImagen} from '../utils/productoImagenStorage.js';
+
+const SESSION_ANADIR_PRODUCTO_ERROR = 'anadirProductoError';
 export async function renderDetalleProductoCliente(request, response) {
-  const { id } = request.params;
+  const {id} = request.params;
 
   try {
-    const { data, error } = await Producto.findById(id);
+    const {data, error} = await Producto.findById(id);
 
     if (error || data == null) {
       console.log(error);
@@ -33,7 +36,7 @@ export async function renderDetalleProductoCliente(request, response) {
 
 export async function renderCatalogoCliente(request, response) {
   try {
-    const { data, error } = await Producto.fetchAll();
+    const {data, error} = await Producto.fetchAll();
 
     if (error) {
       throw error;
@@ -53,10 +56,9 @@ export async function renderCatalogoCliente(request, response) {
   }
 }
 
-export async function renderCatalogoEmpleado(request,response){
-  
+export async function renderCatalogoEmpleado(request, response) {
   try {
-    const { data, error } = await Producto.fetchAll();
+    const {data, error} = await Producto.fetchAll();
     console.log('data:', data);
     console.log('error:', error);
 
@@ -80,33 +82,66 @@ export async function renderCatalogoEmpleado(request,response){
 
 export async function renderAnadirProducto(request, response) {
   const success = request.query.success === '1';
-  const error = request.query.error === '1';
-  response.render('empleado/anadir-producto', { title: 'Añadir Producto', success, error });
+  let errorMessage = request.session[SESSION_ANADIR_PRODUCTO_ERROR] ?? null;
+  if (errorMessage != null) {
+    delete request.session[SESSION_ANADIR_PRODUCTO_ERROR];
+  }
+  if (!errorMessage && request.query.error === '1') {
+    errorMessage =
+        'Lo siento, ocurrió un error al añadir el producto a la base de datos. Revisa los datos e intenta de nuevo.';
+  }
+  response.render('empleado/anadir-producto', {
+    title: 'Añadir Producto',
+    success,
+    errorMessage,
+  });
 }
 
-export function postAnadirProducto(request, response, next) {
-  const producto = new Producto(request.body.idProducto, request.body.nombreProducto,
-    request.body.descripcion, request.body.precio, request.body.foto,
-    request.body.pesoUnidad, request.body.unidadVenta, request.body.idCampana); // instancia de la clase
-  producto.save()
-    .then(({ data, error }) => {
-      if (error) {
-        console.log(error);
-        throw error;
-      }
-      return response.redirect('/empleado/gestion-productos/anadir-producto?success=1');
-    })
-    .catch((error) => {
+export async function postAnadirProducto(request, response) {
+  try {
+    const file = request.file;
+    if (!file) {
+      request.session[SESSION_ANADIR_PRODUCTO_ERROR] =
+          'Selecciona una imagen del producto (JPG, PNG, WebP o GIF).';
+      return response.redirect('/empleado/gestion-productos/anadir-producto');
+    }
+
+    const {publicUrl: foto} = await uploadProductoImagen(
+        file.buffer,
+        file.mimetype,
+        request.body.idProducto,
+    );
+
+    const producto = new Producto(
+        request.body.idProducto,
+        request.body.nombreProducto,
+        request.body.descripcion,
+        request.body.precio,
+        foto,
+        request.body.pesoUnidad,
+        request.body.unidadVenta,
+        request.body.idCampana,
+    );
+
+    const {error} = await producto.save();
+    if (error) {
       console.log(error);
-      return response.redirect('/empleado/gestion-productos/anadir-producto?error=1');
-    });
+      throw error;
+    }
+    return response.redirect('/empleado/gestion-productos/anadir-producto?success=1');
+  } catch (error) {
+    console.log(error);
+    request.session[SESSION_ANADIR_PRODUCTO_ERROR] =
+        'Lo siento, ocurrió un error al añadir el producto a la base de datos. Revisa los datos e intenta de nuevo.';
+    return response.redirect('/empleado/gestion-productos/anadir-producto');
+  }
 }
 
 export async function renderGestionProductos(request, response) {
   const success = request.query.success;
   const errorHabilitado = request.query.errorHabilitado === '1';
   try {
-    const { data, error } = await Producto.fetchAllGestion();
+    const {data, error} = await Producto.fetchAllGestion();
     if (error) {
       throw error;
     }
@@ -123,7 +158,7 @@ export async function renderGestionProductos(request, response) {
       productos: [],
       errorRecuperacion: 1,
       errorHabilitado,
-      success
+      success,
     });
   }
 }
@@ -140,14 +175,13 @@ export async function deshabilitarProductos(request, response) {
       return response.redirect('/empleado/gestion-productos?error=sin-seleccion');
     }
 
-    const { error } = await Producto.deshabilitar(productosDeshabilitar);
+    const {error} = await Producto.deshabilitar(productosDeshabilitar);
 
     if (error) {
       console.error(error);
       throw error;
     }
     return response.redirect('/empleado/gestion-productos?success=deshabilitar');
-
   } catch (error) {
     return response.redirect('/empleado/gestion-productos?errorHabilitado=1');
   }
@@ -165,19 +199,16 @@ export async function rehabilitarProductos(request, response) {
       return response.redirect('/empleado/gestion-productos?error=sin-seleccion');
     }
 
-    const { error } = await Producto.rehabilitar(productosRehabilitar);
+    const {error} = await Producto.rehabilitar(productosRehabilitar);
 
     if (error) {
       console.error(error);
       throw error;
     }
     return response.redirect('/empleado/gestion-productos?success=rehabilitar');
-
   } catch (error) {
     return response.redirect('/empleado/gestion-productos?errorHabilitado=1');
   }
-
-
 }
 
 export async function deshabilitarProductosCatalogo(request, response) {
@@ -192,14 +223,13 @@ export async function deshabilitarProductosCatalogo(request, response) {
       return response.redirect('/empleado/catalogo?error=sin-seleccion');
     }
 
-    const { error } = await Producto.deshabilitar(productosSeleccionados);
+    const {error} = await Producto.deshabilitar(productosSeleccionados);
 
     if (error) {
       console.error(error);
       throw error;
     }
     return response.redirect('/empleado/catalogo?success=deshabilitar');
-
   } catch (error) {
     return response.redirect('/empleado/catalogo?errorModificar=1');
   }
