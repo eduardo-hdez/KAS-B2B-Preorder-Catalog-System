@@ -78,5 +78,50 @@ async function crearCampana(payload) {
   return true;
 }
 
+async function obtenerCampanaPorId(id) {
+  const supabase = await getSupabase();
+  const { data, error } = await supabase
+    .from('campana')
+    .select('*')
+    .eq('id_campana', id)
+    .single();
+  if (error) throw error;
+  return {
+    id: data.id_campana,
+    nombre: data.nombre_campana,
+    fechaInicio: data.fecha_inicio,
+    fechaFin: data.fecha_fin,
+    banner: data.banner,
+    tiempoCancelacion: data.tiempo_cancelacion,
+  };
+}
 
-export default {listarCampanas, crearCampana, getCampanaActiva};
+async function actualizarCampana(id, campos) {
+  const supabase = await getSupabase();
+  const banner =
+    campos.banner && String(campos.banner).trim() !== ''
+      ? String(campos.banner).trim()
+      : null;
+
+  let tiempoCancelacion = null;
+  if (campos.tiempoCancelacion !== undefined && campos.tiempoCancelacion !== '' && campos.tiempoCancelacion !== null) {
+    const n = Number(campos.tiempoCancelacion);
+    if (!Number.isNaN(n)) tiempoCancelacion = n;
+  }
+
+  const { error } = await supabase
+    .from('campana')
+    .update({
+      nombre_campana: campos.nombre,
+      fecha_inicio: campos.fechaInicio,
+      fecha_fin: campos.fechaFin,
+      banner,
+      tiempo_cancelacion: tiempoCancelacion,
+    })
+    .eq('id_campana', id);
+
+  if (error) throw error;
+  return true;
+}
+
+export default { listarCampanas, crearCampana, getCampanaActiva, obtenerCampanaPorId, actualizarCampana };

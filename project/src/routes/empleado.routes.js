@@ -44,7 +44,8 @@ router.get('/campanas', campanaController.renderCampanas);
 
 router.get('/campanas/nueva', campanaController.renderNuevaCampana);
 router.post('/campanas/nueva', campanaController.crearCampanaPost);
-
+router.get('/campanas/:id/editar', campanaController.renderEditarCampana);
+router.post('/campanas/:id/editar', campanaController.editarCampanaPost);
 router.get('/campanas/:id/banners', campanaController.renderBannersCampana);
 
 export default router;

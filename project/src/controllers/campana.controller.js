@@ -146,10 +146,97 @@ function renderBannersCampana(request, response) {
   });
 }
 
+async function renderEditarCampana(request, response) {
+  try {
+    const campana = await campanaModel.obtenerCampanaPorId(request.params.id);
+    if (!campana) {
+      return response.status(404).redirect('/empleado/campanas');
+    }
+    return response.render('empleado/campaña-editar', {
+      title: 'Editar campaña',
+      error: null,
+      campana: {
+        id: campana.id,
+        idCampana: campana.id,
+        nombreCampana: campana.nombre,
+        fechaInicio: toISODate(campana.fechaInicio),
+        fechaFin: toISODate(campana.fechaFin),
+        banners: campana.banner || '',
+        tiempoCancelacion: campana.tiempoCancelacion || '',
+      },
+    });
+  } catch (error) {
+    console.error('Error al cargar campaña:', error.message);
+    return response.redirect('/empleado/campanas');
+  }
+}
+
+async function editarCampanaPost(request, response) {
+  const id = request.params.id;
+  const nombreCampana = String(request.body.nombreCampana || '').trim();
+  const fi = String(request.body.fechaInicio ?? '').trim();
+  const ff = String(request.body.fechaFin ?? '').trim();
+  const banners = request.body.banners;
+  const tiempoCancelacion = request.body.tiempoCancelacion;
+
+  const campana = {
+    id,
+    idCampana: id,
+    nombreCampana,
+    fechaInicio: fi,
+    fechaFin: ff,
+    banners: banners != null ? String(banners) : '',
+    tiempoCancelacion: tiempoCancelacion != null ? String(tiempoCancelacion) : '',
+  };
+
+  if (!nombreCampana || !fi || !ff) {
+    return response.status(400).render('empleado/campaña-editar', {
+      title: 'Editar campaña',
+      error: 'El nombre y ambas fechas son obligatorios.',
+      campana,
+    });
+  }
+
+  if (!isValidCampanaFechaInput(fi) || !isValidCampanaFechaInput(ff)) {
+    return response.status(400).render('empleado/campaña-editar', {
+      title: 'Editar campaña',
+      error: 'Las fechas deben ser válidas (formato AAAA-MM-DD).',
+      campana,
+    });
+  }
+
+  if (Date.parse(`${ff}T00:00:00.000Z`) < Date.parse(`${fi}T00:00:00.000Z`)) {
+    return response.status(400).render('empleado/campaña-editar', {
+      title: 'Editar campaña',
+      error: 'La fecha final debe ser igual o posterior a la de inicio.',
+      campana,
+    });
+  }
+
+  try {
+    await campanaModel.actualizarCampana(id, {
+      nombre: nombreCampana,
+      fechaInicio: fi,
+      fechaFin: ff,
+      banner: banners,
+      tiempoCancelacion,
+    });
+    return response.redirect('/empleado/campanas');
+  } catch (error) {
+    console.error('Error al editar campaña:', error.message);
+    return response.status(500).render('empleado/campaña-editar', {
+      title: 'Editar campaña',
+      error: error.message || 'No se pudo actualizar la campaña.',
+      campana,
+    });
+  }
+}
 
 export default {
   renderCampanas,
   renderNuevaCampana,
   crearCampanaPost,
   renderBannersCampana,
+  renderEditarCampana,  
+  editarCampanaPost,   
 };
