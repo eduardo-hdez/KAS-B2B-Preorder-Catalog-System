@@ -29,7 +29,7 @@ export default class Producto {
 
     static async fetchAllGestion() {
         const { data, error } = await supabase
-            .rpc('get_productos_campania')    //campaña actual (hardcodeada)
+            .rpc('get_productos_campania')
         return { data, error }
     }
 
