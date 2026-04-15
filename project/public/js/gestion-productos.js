@@ -40,24 +40,28 @@ const btnModalNoSeleccion = document.getElementById('btnModalNoSeleccion');
 const mostrarModalDeshabilitar = () => {
   if (modalDeshabilitar) {
     modalDeshabilitar.classList.remove('hidden');
+    modalDeshabilitar.classList.add('flex');
   }
 };
 
 const ocultarModalDeshabilitar = () => {
   if (modalDeshabilitar) {
     modalDeshabilitar.classList.add('hidden');
+    modalDeshabilitar.classList.remove('flex');
   }
 };
 
 const mostrarModalNoSeleccion = () => {
   if (modalNoSeleccion) {
     modalNoSeleccion.classList.remove('hidden');
+    modalNoSeleccion.classList.add('flex');
   }
 };
 
 const ocultarModalNoSeleccion = () => {
   if (modalNoSeleccion) {
     modalNoSeleccion.classList.add('hidden');
+    modalNoSeleccion.classList.remove('flex');
   }
 };
 
@@ -126,12 +130,14 @@ const btnConfirmarRehabilitar = document.getElementById('btnConfirmarRehabilitar
 const mostrarModalRehabilitar = () => {
   if (modalRehabilitar) {
     modalRehabilitar.classList.remove('hidden');
+    modalRehabilitar.classList.add('flex');
   }
 };
 
 const ocultarModalRehabilitar = () => {
   if (modalRehabilitar) {
     modalRehabilitar.classList.add('hidden');
+    modalRehabilitar.classList.remove('flex');
   }
 };
 
