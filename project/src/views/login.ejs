@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <%- include('./partials/head') %>
 </head>
+
 <body class="bg-gray-50 flex flex-col min-h-screen">
   <main class="flex-grow flex items-center justify-center px-4 py-12">
     <div class="w-full max-w-md bg-white rounded-lg border border-gray-200 shadow-sm p-8">
@@ -14,48 +16,41 @@
         <div class="mb-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
           <%= error %>
         </div>
-      <% } %>
+        <% } %>
+          <% if (expired) { %>
+            <div class="mb-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+              La sesión expiró por inactividad. Por favor inicia sesión nuevamente.
+            </div>
+            <% } %>
 
-      <form action="/login" method="POST" class="space-y-5">
-        <div>
-          <label for="correo" class="block text-sm font-medium text-gray-800 mb-1.5">
-            Correo
-          </label>
-          <input
-            type="text"
-            id="correo"
-            name="correo"
-            value="<%= correo || '' %>"
-            autocomplete="username"
-            required
-            class="w-full px-3 py-2 rounded-md border border-gray-300 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#2B6398] focus:border-[#2B6398]"
-            placeholder="Tu correo"
-          />
-        </div>
-        <div>
-          <label for="password" class="block text-sm font-medium text-gray-800 mb-1.5">
-            Contraseña
-          </label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            autocomplete="current-password"
-            required
-            class="w-full px-3 py-2 rounded-md border border-gray-300 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#2B6398] focus:border-[#2B6398]"
-            placeholder="••••••••"
-          />
-        </div>
-        <button
-          type="submit"
-          class="w-full py-2.5 rounded-md font-medium text-white bg-[#2B6398] hover:bg-[#24537e] transition-colors"
-        >
-          Iniciar sesión
-        </button>
-      </form>
+              <form action="/login" method="POST" class="space-y-5">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <div>
+                  <label for="correo" class="block text-sm font-medium text-gray-800 mb-1.5">
+                    Correo
+                  </label>
+                  <input type="text" id="correo" name="correo" value="<%= correo || '' %>" autocomplete="username"
+                    required
+                    class="w-full px-3 py-2 rounded-md border border-gray-300 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#2B6398] focus:border-[#2B6398]"
+                    placeholder="Tu correo" />
+                </div>
+                <div>
+                  <label for="password" class="block text-sm font-medium text-gray-800 mb-1.5">
+                    Contraseña
+                  </label>
+                  <input type="password" id="password" name="password" autocomplete="current-password" required
+                    class="w-full px-3 py-2 rounded-md border border-gray-300 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#2B6398] focus:border-[#2B6398]"
+                    placeholder="••••••••" />
+                </div>
+                <button type="submit"
+                  class="w-full py-2.5 rounded-md font-medium text-white bg-[#2B6398] hover:bg-[#24537e] transition-colors">
+                  Iniciar sesión
+                </button>
+              </form>
     </div>
   </main>
 
   <%- include('./partials/footer') %>
 </body>
+
 </html>

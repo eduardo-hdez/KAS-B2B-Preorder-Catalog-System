@@ -13,4 +13,21 @@
       <a href="/terminoscondiciones" class="hover:underline whitespace-nowrap text-sm">Términos y condiciones</a>
     </div>
   </div>
+  <div id="modalInvalidToken" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    <div class="bg-white rounded-lg shadow-lg p-6 max-w-md text-center">
+      <h2 class="text-lg font-semibold mb-4">Sesión de formulario expirada</h2>
+      <p class="mb-6">Por seguridad el formulario expiró. Por favor recarga la página e inténtalo de nuevo.</p>
+      <button onclick="location.reload()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+        Recargar página
+      </button>
+    </div>
+  </div>
+  <script>
+    const url = new URL(window.location.href);
+    if (url.searchParams.get('invalidToken') === '1') {
+      document.getElementById('modalInvalidToken').classList.remove('hidden');
+      url.searchParams.delete('invalidToken');
+      window.history.replaceState({}, document.title, url.pathname + url.search);
+    }
+  </script>
 </footer>
