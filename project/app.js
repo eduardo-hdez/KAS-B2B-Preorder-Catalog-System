@@ -3,10 +3,17 @@ import express from 'express';
 import path from 'path';
 import session from 'express-session';
 import { fileURLToPath } from 'url';
-import { csrfSync } from 'csrf-sync'; //versión actual y compatible de csrf
+import {
+  csrfSynchronisedProtection,
+  csrfTokenLocalsMiddleware,
+} from './src/middleware/csrf.middleware.js';
 import authRoutes from './src/routes/auth.routes.js';
 import clienteRoutes from './src/routes/cliente.routes.js';
 import empleadoRoutes from './src/routes/empleado.routes.js';
+import {
+  rootRedirectMiddleware,
+  csrfErrorMiddleware,
+} from './src/middleware/request.middleware.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -33,16 +40,8 @@ app.use((request, response, next) => {
   next();
 });
 
-const { csrfSynchronisedProtection, generateToken } = csrfSync({
-  getTokenFromRequest: (request) => request.body._csrf,
-});
-
 app.use(csrfSynchronisedProtection);
-
-app.use((request, response, next) => { //genera el token CSRF y hacerlo variable local de todas las vistas
-  response.locals.csrfToken = generateToken(request);
-  next();
-});
+app.use(csrfTokenLocalsMiddleware);
 
 app.use(authRoutes);
 app.use('/cliente', clienteRoutes);
@@ -57,21 +56,8 @@ app.get('/terminoscondiciones', (request, response) => {
   response.render('terminoscondiciones', { title: 'Términos y Condiciones' });
 });
 
-app.get('/', (request, response) => {
-  const expired = request.query.expired === '1';
-  response.redirect('/login', expired);
-});
+app.get('/', rootRedirectMiddleware);
 
-//Middleware para el manejo de error de tipo token CSRF inválido (global)
-app.use((err, request, response, next) => {
-  if (err.code !== 'EBADCSRFTOKEN') {
-    return next(err);
-  }
-  const sesionActiva = request.session && request.session.idUsuario;
-  if (sesionActiva) { //la sesión aún es válida, solo el token CSRF expiró
-    return response.redirect(request.originalUrl.split('?')[0] + '?invalidToken=1');
-  }
-  return response.redirect('/login?expired=1'); //la sesión expiró (se debe volver a iniciar sesión)
-});
+app.use(csrfErrorMiddleware);
 
 app.listen(3000);
